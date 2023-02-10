@@ -1,0 +1,6 @@
+---
+- name: playbook for apache role
+  hosts: prod
+  roles:
+    - role: apache
+...

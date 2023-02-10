@@ -1,0 +1,46 @@
+---
+- name: Playbook awesome
+  hosts: all
+  vars_files:
+   - user_list.yml
+   - vault.yml
+  tasks:
+   - name: create the groups
+     group:
+       name: "{{ item }}"
+       state: present
+     loop:
+       - devops
+       - opsmgr
+   - name: create the users with devops profile
+     user:
+       name: "{{ item.name }}"
+       groups: devops
+       append: true
+       password: "{{dev_pass | password_hash('sha512')}}"
+       state: present
+     loop: "{{ users }}"
+     when:
+      - item.job == 'DevopsEngg'
+      - inventory_hostname in groups ['dev'] or inventory_hostname in groups['test']
+   - name: create the users with devops profile
+     user:
+       name: "{{ item.name }}"
+       groups: devops
+       append: true
+       password: "{{mgr_pass | password_hash('sha512')}}"
+       state: present
+     loop: "{{ users }}"
+     when:
+      - item.job == 'Manager'
+      - inventory_hostname in groups ['prod']
+
+      
+  
+     
+
+...
+
+
+
+

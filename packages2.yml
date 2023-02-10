@@ -1,0 +1,12 @@
+- hosts: all
+  vars:
+   pkgs:
+     - git
+     - dialog
+  tasks:
+   - name: Install the packages in dev environment
+     yum:
+      name: "{{ item }}"
+      state: present
+     loop: "{{ pkgs }}"
+     when: inventory_hostname in groups['dev']
